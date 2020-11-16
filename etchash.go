@@ -419,6 +419,7 @@ type Light struct {
 
 // Verify checks whether the block's nonce is valid.
 func (l *Light) VerifyShare(block Block, shareDiff *big.Int) (bool, bool, int64, common.Hash) {	
+	zeroHash := common.Hash{}
 	// TODO: do etchash_quick_verify before getCache in order
 	// to prevent DOS attacks.
 	blockNum := block.NumberU64()
@@ -455,7 +456,7 @@ func (l *Light) VerifyShare(block Block, shareDiff *big.Int) (bool, bool, int64,
 	}
 
 	// The actual check.
-	blockTarget := new(big.Int).Div(maxUint256, blockDiff)
+	blockTarget := new(big.Int).Div(maxUint256, difficulty)
 	shareTarget := new(big.Int).Div(maxUint256, shareDiff)
 	actualDiff := new(big.Int).Div(maxUint256, result.Big())
 	return result.Big().Cmp(shareTarget) <= 0, result.Big().Cmp(blockTarget) <= 0, actualDiff.Int64(), mixDigest
